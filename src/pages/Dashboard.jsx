@@ -22,34 +22,59 @@ const Dashboard = () => {
     ? (campaigns.reduce((sum, c) => sum + (c.ctr || 0), 0) / campaigns.length).toFixed(1)
     : 0;
 
+  // Metric card click handlers
+  const handleActiveCampaignsClick = () => {
+    navigate('/campaigns', { state: { filterStatus: 'ACTIVE' } });
+  };
+
+  const handleTotalSpendClick = () => {
+    navigate('/analytics', { state: { focusMetric: 'spend' } });
+  };
+
+  const handleConversionsClick = () => {
+    navigate('/analytics', { state: { focusMetric: 'conversions' } });
+  };
+
+  const handleCTRClick = () => {
+    navigate('/analytics', { state: { focusMetric: 'ctr' } });
+  };
+
   const metrics = [
     {
       title: 'Active Campaigns',
       value: activeCampaigns.toString(),
       change: `${campaigns.length} total campaigns`,
       icon: FiTarget,
-      color: 'from-blue-500 to-blue-600'
+      color: 'from-blue-500 to-blue-600',
+      onClick: handleActiveCampaignsClick,
+      clickable: true
     },
     {
       title: 'Total Spend',
       value: `$${totalSpend.toLocaleString()}`,
       change: `${campaigns.length} campaigns running`,
       icon: FiDollarSign,
-      color: 'from-green-500 to-green-600'
+      color: 'from-green-500 to-green-600',
+      onClick: handleTotalSpendClick,
+      clickable: true
     },
     {
       title: 'Conversions',
       value: totalConversions.toLocaleString(),
       change: `Across ${campaigns.length} campaigns`,
       icon: FiUsers,
-      color: 'from-purple-500 to-purple-600'
+      color: 'from-purple-500 to-purple-600',
+      onClick: handleConversionsClick,
+      clickable: true
     },
     {
       title: 'Avg CTR',
       value: `${avgCTR}%`,
       change: campaigns.length > 0 ? 'Average performance' : 'No data yet',
       icon: FiTrendingUp,
-      color: 'from-orange-500 to-orange-600'
+      color: 'from-orange-500 to-orange-600',
+      onClick: handleCTRClick,
+      clickable: true
     }
   ];
 
@@ -120,7 +145,7 @@ const Dashboard = () => {
         </div>
       </motion.div>
 
-      {/* Metrics Grid */}
+      {/* Interactive Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {metrics.map((metric, index) => (
           <motion.div
@@ -133,6 +158,21 @@ const Dashboard = () => {
           </motion.div>
         ))}
       </div>
+
+      {/* Metric Cards Instructions */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6 }}
+        className="bg-blue-50 border border-blue-200 rounded-lg p-4"
+      >
+        <div className="flex items-center space-x-2">
+          <SafeIcon icon={FiTrendingUp} className="w-5 h-5 text-blue-600" />
+          <p className="text-sm text-blue-800">
+            <strong>Tip:</strong> Click on any metric card above to view detailed insights and analytics for that specific metric.
+          </p>
+        </div>
+      </motion.div>
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
